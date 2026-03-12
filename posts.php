@@ -253,7 +253,7 @@ deleteModal?.addEventListener('show.bs.modal', event=>{
 });
 
 document.querySelectorAll('.sidebar a').forEach(a=>{
-  if(a.getAttribute('href') === location.pathname.replace(/\\/$/, '')){a.classList.add('active')}
+  if(a.getAttribute('href') === location.pathname.replace(/\/$/, '')){a.classList.add('active')}
 });
 
 document.querySelectorAll('form').forEach(form=>{

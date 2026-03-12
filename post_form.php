@@ -573,7 +573,7 @@ input?.addEventListener('change', ()=>{
   }
 });
 
-const currentPath = location.pathname.replace(/\\/$/, '');
+const currentPath = location.pathname.replace(/\/$/, '');
 const sidebarToggle = document.getElementById('sidebarToggle');
 const collapsed = localStorage.getItem('sidebar-collapsed') === '1';
 if (collapsed) document.body.classList.add('sidebar-collapsed');

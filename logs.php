@@ -221,7 +221,7 @@ body.sidebar-collapsed .sidebar .nav-label{display:none}
 <!-- SECTION: INLINE JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-const currentPath = location.pathname.replace(/\\/$/, '');
+const currentPath = location.pathname.replace(/\/$/, '');
 const sidebarToggle = document.getElementById('sidebarToggle');
 const collapsed = localStorage.getItem('sidebar-collapsed') === '1';
 if (collapsed) document.body.classList.add('sidebar-collapsed');
