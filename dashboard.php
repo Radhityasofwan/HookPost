@@ -180,6 +180,17 @@ body{background:var(--bg);color:var(--ink)}
                 </div>
             </div>
         </main>
+
+        <footer class="px-3 px-lg-4 pb-4">
+            <div class="card card-soft p-3 d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2">
+                <div class="text-muted small">© <?= e(date('Y')) ?> <?= e(APP_NAME) ?>. All rights reserved.</div>
+                <div class="d-flex gap-3 small">
+                    <a href="/terms" class="text-decoration-none">Terms of Service</a>
+                    <a href="/privacy" class="text-decoration-none">Privacy Policy</a>
+                    <a href="/data-deletion" class="text-decoration-none">Data Deletion</a>
+                </div>
+            </div>
+        </footer>
     </div>
 </div>
 
@@ -203,8 +214,9 @@ body{background:var(--bg);color:var(--ink)}
 <!-- SECTION: INLINE JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
+const currentPath = location.pathname.replace(/\\/$/, '');
 document.querySelectorAll('.sidebar a').forEach(a=>{
-  if(a.getAttribute('href')===location.pathname.split('/').pop()){a.classList.add('active')}
+  if(a.getAttribute('href') === currentPath){a.classList.add('active')}
 });
 </script>
 </body>
