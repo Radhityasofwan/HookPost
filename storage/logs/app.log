@@ -1,0 +1,18 @@
+[2026-03-11 19:00:51] posts load error: SQLSTATE[HY000]: General error: 1 no such column: p.status
+[2026-03-11 19:02:04] posts load error: SQLSTATE[HY000]: General error: 1 no such column: p.status
+[2026-03-11 19:02:09] posts load error: SQLSTATE[HY000]: General error: 1 no such column: p.status
+[2026-03-11 19:02:12] posts load error: SQLSTATE[HY000]: General error: 1 no such column: p.status
+[2026-03-11 19:02:17] posts load error: SQLSTATE[HY000]: General error: 1 no such column: p.status
+[2026-03-11 19:02:23] posts load error: SQLSTATE[HY000]: General error: 1 no such column: p.status
+[2026-03-11 19:02:25] posts load error: SQLSTATE[HY000]: General error: 1 no such column: p.status
+[2026-03-11 19:03:23] post_form save error: SQLSTATE[HY000]: General error: 1 table posts has no column named status
+[2026-03-11 19:03:38] posts load error: SQLSTATE[HY000]: General error: 1 no such column: p.status
+[2026-03-11 19:03:39] posts load error: SQLSTATE[HY000]: General error: 1 no such column: p.status
+[2026-03-11 19:16:37] posts load error: SQLSTATE[HY000]: General error: 1 no such column: p.status
+[2026-03-11 21:37:18] posts load error: SQLSTATE[HY000]: General error: 1 no such column: p.status
+[2026-03-11 21:37:20] posts load error: SQLSTATE[HY000]: General error: 1 no such column: p.status
+[2026-03-11 21:37:21] posts load error: SQLSTATE[HY000]: General error: 1 no such column: p.status
+[2026-03-11 21:37:23] posts load error: SQLSTATE[HY000]: General error: 1 no such column: p.status
+[2026-03-11 21:37:26] posts load error: SQLSTATE[HY000]: General error: 1 no such column: p.status
+[2026-03-11 21:38:08] post_form save error: SQLSTATE[HY000]: General error: 1 no such function: NOW
+[2026-03-11 22:04:48] posts retry error: SQLSTATE[23000]: Integrity constraint violation: 19 NOT NULL constraint failed: publish_jobs.job_key
