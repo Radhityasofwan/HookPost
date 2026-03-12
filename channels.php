@@ -1,6 +1,6 @@
 <?php
 /* =========================================================
- * PAGE: channels.php
+ * PAGE: channels
  * ========================================================= */
 /* SECTION: BOOTSTRAP */
 require_once __DIR__ . '/db.php';
@@ -70,7 +70,7 @@ function upsert_channel($pdo, $platform, $data) {
 if (isset($_GET['meta_connect'])) {
     if (!META_APP_ID || !META_APP_SECRET || !$meta_redirect) {
         flash_set('danger', 'Meta App ID/Secret/Redirect belum dikonfigurasi.');
-        redirect_to('channels.php');
+        redirect_to('channels');
     }
     $state = bin2hex(random_bytes(16));
     $_SESSION['meta_oauth_state'] = $state;
@@ -82,7 +82,7 @@ if (isset($_GET['meta_connect'])) {
 if (isset($_GET['tiktok_connect'])) {
     if (!TIKTOK_CLIENT_KEY || !TIKTOK_CLIENT_SECRET || !$tiktok_redirect) {
         flash_set('danger', 'TikTok client key/secret/redirect belum dikonfigurasi.');
-        redirect_to('channels.php');
+        redirect_to('channels');
     }
     $state = bin2hex(random_bytes(16));
     $_SESSION['tiktok_oauth_state'] = $state;
@@ -99,21 +99,21 @@ $has_error = isset($_GET['error']) || isset($_GET['error_code']) || isset($_GET[
 if ($has_error && !$incoming_state) {
     $msg = $_GET['error_message'] ?? $_GET['error_description'] ?? $_GET['error'] ?? 'OAuth error.';
     flash_set('danger', 'OAuth gagal: ' . $msg);
-    redirect_to('channels.php');
+    redirect_to('channels');
 }
 if ($incoming_state && $has_error) {
     if (hash_equals($_SESSION['meta_oauth_state'] ?? '', $incoming_state)) {
         $msg = $_GET['error_message'] ?? $_GET['error_description'] ?? $_GET['error'] ?? 'Meta OAuth error.';
         flash_set('danger', 'Meta OAuth gagal: ' . $msg);
-        redirect_to('channels.php');
+        redirect_to('channels');
     }
     if (hash_equals($_SESSION['tiktok_oauth_state'] ?? '', $incoming_state)) {
         $msg = $_GET['error_description'] ?? $_GET['error_message'] ?? $_GET['error'] ?? 'TikTok OAuth error.';
         flash_set('danger', 'TikTok OAuth gagal: ' . $msg);
-        redirect_to('channels.php');
+        redirect_to('channels');
     }
     flash_set('danger', 'OAuth gagal: ' . ($_GET['error_message'] ?? $_GET['error_description'] ?? $_GET['error'] ?? 'Unknown error'));
-    redirect_to('channels.php');
+    redirect_to('channels');
 }
 
 if (isset($_GET['code']) && $incoming_state) {
@@ -204,11 +204,11 @@ if (isset($_GET['code']) && $incoming_state) {
 
             $msg = $notes ? 'Meta connect sebagian: ' . implode(' ', $notes) : 'Meta connect berhasil.';
             flash_set($notes ? 'warning' : 'success', $msg);
-            redirect_to('channels.php');
+            redirect_to('channels');
         } catch (Throwable $e) {
             log_line('meta oauth error: ' . $e->getMessage(), 'app.log');
             flash_set('danger', APP_DEBUG ? $e->getMessage() : 'Meta connect gagal.');
-            redirect_to('channels.php');
+            redirect_to('channels');
         }
     } elseif (hash_equals($_SESSION['tiktok_oauth_state'] ?? '', $incoming_state)) {
         try {
@@ -255,15 +255,15 @@ if (isset($_GET['code']) && $incoming_state) {
             ]);
 
             flash_set('success', 'TikTok connect berhasil.');
-            redirect_to('channels.php');
+            redirect_to('channels');
         } catch (Throwable $e) {
             log_line('tiktok oauth error: ' . $e->getMessage(), 'app.log');
             flash_set('danger', APP_DEBUG ? $e->getMessage() : 'TikTok connect gagal.');
-            redirect_to('channels.php');
+            redirect_to('channels');
         }
     } else {
         flash_set('danger', 'Invalid OAuth state.');
-        redirect_to('channels.php');
+        redirect_to('channels');
     }
 }
 
@@ -274,7 +274,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (!isset($platforms[$platform])) {
         flash_set('danger', 'Platform tidak valid.');
-        redirect_to('channels.php');
+        redirect_to('channels');
     }
 
     try {
@@ -329,7 +329,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
 
             flash_set('success', 'Koneksi disimpan.');
-            redirect_to('channels.php');
+            redirect_to('channels');
         }
 
         if ($action === 'disconnect') {
@@ -350,12 +350,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 WHERE platform = :platform");
             $update->execute([':platform' => $platform, ':now' => $now]);
             flash_set('success', 'Koneksi diputus.');
-            redirect_to('channels.php');
+            redirect_to('channels');
         }
     } catch (Throwable $e) {
         log_line('channels action error: ' . $e->getMessage(), 'app.log');
         flash_set('danger', APP_DEBUG ? $e->getMessage() : 'Gagal menyimpan koneksi.');
-        redirect_to('channels.php');
+        redirect_to('channels');
     }
 }
 
@@ -375,7 +375,7 @@ try {
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>channels.php - <?= e(APP_NAME) ?></title>
+<title>channels - <?= e(APP_NAME) ?></title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <!-- SECTION: INLINE CSS -->
 <style>
@@ -413,12 +413,12 @@ body{background:var(--bg);color:var(--ink)}
             <span><?= e(APP_NAME) ?></span>
         </div>
         <nav class="d-grid gap-2">
-            <a href="dashboard.php">Dashboard</a>
-            <a href="posts.php">Posts</a>
-            <a href="post_form.php">Create Post</a>
-            <a href="channels.php">Channels</a>
-            <a href="logs.php">Logs</a>
-            <a href="logout.php">Logout</a>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/posts">Posts</a>
+            <a href="/post-form">Create Post</a>
+            <a href="/channels">Channels</a>
+            <a href="/logs">Logs</a>
+            <a href="/logout">Logout</a>
         </nav>
     </aside>
 
@@ -445,7 +445,7 @@ body{background:var(--bg);color:var(--ink)}
                         <div class="fw-semibold">Connect Meta (Instagram/Facebook/Threads)</div>
                         <div class="text-secondary small">Gunakan OAuth Meta untuk menyimpan token dan akun otomatis.</div>
                     </div>
-                    <a class="btn btn-primary" href="channels.php?meta_connect=1">Connect Meta</a>
+                    <a class="btn btn-primary" href="/channels?meta_connect=1">Connect Meta</a>
                 </div>
             </div>
 
@@ -456,7 +456,7 @@ body{background:var(--bg);color:var(--ink)}
                         <div class="fw-semibold">Connect TikTok</div>
                         <div class="text-secondary small">OAuth TikTok untuk akses publish.</div>
                     </div>
-                    <a class="btn btn-dark" href="channels.php?tiktok_connect=1">Connect TikTok</a>
+                    <a class="btn btn-dark" href="/channels?tiktok_connect=1">Connect TikTok</a>
                 </div>
             </div>
 
@@ -528,12 +528,12 @@ body{background:var(--bg);color:var(--ink)}
     </div>
     <div class="offcanvas-body">
         <nav class="d-grid gap-2">
-            <a class="btn btn-light text-start" href="dashboard.php">Dashboard</a>
-            <a class="btn btn-light text-start" href="posts.php">Posts</a>
-            <a class="btn btn-light text-start" href="post_form.php">Create Post</a>
-            <a class="btn btn-light text-start" href="channels.php">Channels</a>
-            <a class="btn btn-light text-start" href="logs.php">Logs</a>
-            <a class="btn btn-outline-danger text-start" href="logout.php">Logout</a>
+            <a class="btn btn-light text-start" href="/dashboard">Dashboard</a>
+            <a class="btn btn-light text-start" href="/posts">Posts</a>
+            <a class="btn btn-light text-start" href="/post-form">Create Post</a>
+            <a class="btn btn-light text-start" href="/channels">Channels</a>
+            <a class="btn btn-light text-start" href="/logs">Logs</a>
+            <a class="btn btn-outline-danger text-start" href="/logout">Logout</a>
         </nav>
     </div>
 </div>

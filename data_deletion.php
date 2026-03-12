@@ -1,6 +1,6 @@
 <?php
 /* =========================================================
- * PAGE: data_deletion.php
+ * PAGE: data-deletion
  * ========================================================= */
 /* SECTION: BOOTSTRAP */
 require_once __DIR__ . '/config.php';
@@ -38,7 +38,7 @@ $callback_url = (defined('APP_URL') && APP_URL) ? (APP_URL . '/data-deletion') :
                                 <h1 class="h3 mb-1">Data Deletion Instructions</h1>
                                 <div class="text-muted small">Effective date: <?php echo htmlspecialchars($effective_date); ?></div>
                             </div>
-                            <a href="login.php" class="btn btn-outline-secondary btn-sm rounded-pill">Back to App</a>
+                            <a href="/login" class="btn btn-outline-secondary btn-sm rounded-pill">Back to App</a>
                         </div>
 
                         <p>This page explains how to request deletion of your data associated with <strong><?php echo htmlspecialchars($app_name); ?></strong>.</p>

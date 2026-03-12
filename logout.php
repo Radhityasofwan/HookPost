@@ -2,5 +2,5 @@
 require_once __DIR__ . '/config.php';
 session_unset();
 session_destroy();
-header('Location: login.php');
-exit;
+require_once __DIR__ . '/helpers.php';
+redirect_to('login');

@@ -1,6 +1,6 @@
 <?php
 /* =========================================================
- * PAGE: logs.php
+ * PAGE: logs
  * ========================================================= */
 /* SECTION: BOOTSTRAP */
 require_once __DIR__ . '/db.php';
@@ -53,7 +53,7 @@ try {
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>logs.php - <?= e(APP_NAME) ?></title>
+<title>logs - <?= e(APP_NAME) ?></title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <!-- SECTION: INLINE CSS -->
 <style>
@@ -92,12 +92,12 @@ body{background:var(--bg);color:var(--ink)}
             <span><?= e(APP_NAME) ?></span>
         </div>
         <nav class="d-grid gap-2">
-            <a href="dashboard.php">Dashboard</a>
-            <a href="posts.php">Posts</a>
-            <a href="post_form.php">Create Post</a>
-            <a href="channels.php">Channels</a>
-            <a href="logs.php">Logs</a>
-            <a href="logout.php">Logout</a>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/posts">Posts</a>
+            <a href="/post-form">Create Post</a>
+            <a href="/channels">Channels</a>
+            <a href="/logs">Logs</a>
+            <a href="/logout">Logout</a>
         </nav>
     </aside>
 
@@ -131,7 +131,7 @@ body{background:var(--bg);color:var(--ink)}
                     ];
                     foreach ($filter_labels as $key => $label):
                         $active = $platform_filter === $key ? 'btn-primary' : 'btn-outline-secondary';
-                        $url = "logs.php?platform=" . $key;
+                        $url = "logs?platform=" . $key;
                         if ($post_filter > 0) $url .= "&post_id=" . $post_filter;
                 ?>
                     <a class="btn btn-sm <?= e($active) ?>" href="<?= e($url) ?>"><?= e($label) ?></a>
@@ -144,7 +144,7 @@ body{background:var(--bg);color:var(--ink)}
                 <div class="d-flex align-items-center justify-content-between mb-3">
                     <div class="fw-semibold">Riwayat Publish</div>
                     <?php if ($post_filter > 0): ?>
-                        <a class="btn btn-sm btn-outline-secondary" href="logs.php">Clear Filter</a>
+                        <a class="btn btn-sm btn-outline-secondary" href="/logs">Clear Filter</a>
                     <?php endif; ?>
                 </div>
                 <div class="table-responsive">
@@ -193,12 +193,12 @@ body{background:var(--bg);color:var(--ink)}
     </div>
     <div class="offcanvas-body">
         <nav class="d-grid gap-2">
-            <a class="btn btn-light text-start" href="dashboard.php">Dashboard</a>
-            <a class="btn btn-light text-start" href="posts.php">Posts</a>
-            <a class="btn btn-light text-start" href="post_form.php">Create Post</a>
-            <a class="btn btn-light text-start" href="channels.php">Channels</a>
-            <a class="btn btn-light text-start" href="logs.php">Logs</a>
-            <a class="btn btn-outline-danger text-start" href="logout.php">Logout</a>
+            <a class="btn btn-light text-start" href="/dashboard">Dashboard</a>
+            <a class="btn btn-light text-start" href="/posts">Posts</a>
+            <a class="btn btn-light text-start" href="/post-form">Create Post</a>
+            <a class="btn btn-light text-start" href="/channels">Channels</a>
+            <a class="btn btn-light text-start" href="/logs">Logs</a>
+            <a class="btn btn-outline-danger text-start" href="/logout">Logout</a>
         </nav>
     </div>
 </div>

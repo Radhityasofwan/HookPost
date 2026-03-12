@@ -1,6 +1,6 @@
 <?php
 /* =========================================================
- * PAGE: posts_retry.php
+ * PAGE: posts-retry
  * ========================================================= */
 /* SECTION: BOOTSTRAP */
 require_once __DIR__ . '/db.php';
@@ -21,7 +21,7 @@ csrf_verify();
 $id = (int) ($_POST['id'] ?? 0);
 if ($id <= 0) {
     flash_set('danger', 'ID tidak valid.');
-    redirect_to('posts.php');
+    redirect_to('posts');
 }
 
 $now = date('Y-m-d H:i:s');
@@ -61,7 +61,7 @@ try {
     flash_set('danger', APP_DEBUG ? $e->getMessage() : 'Gagal membuat ulang job.');
 }
 
-redirect_to('posts.php');
+redirect_to('posts');
 
 /* SECTION: LOAD DATA */
 // Not applicable.

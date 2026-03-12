@@ -9,7 +9,7 @@ require_once __DIR__ . '/config.php';
 /* SECTION: AUTH */
 function require_login() {
     if (empty($_SESSION['user_id'])) {
-        redirect_to('login.php');
+        redirect_to('login');
     }
 }
 
@@ -38,7 +38,12 @@ function e($value) {
 }
 
 function redirect_to($url) {
-    header("Location: $url");
+    if (preg_match('#^https?://#i', $url)) {
+        header("Location: $url");
+    } else {
+        $path = '/' . ltrim($url, '/');
+        header("Location: $path");
+    }
     exit;
 }
 

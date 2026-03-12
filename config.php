@@ -24,6 +24,9 @@ if (!function_exists('env_load')) {
 }
 
 env_load(__DIR__ . '/.env');
+if (($_ENV['APP_ENV'] ?? '') === 'production' && file_exists(__DIR__ . '/.env.production')) {
+    env_load(__DIR__ . '/.env.production');
+}
 
 date_default_timezone_set($_ENV['APP_TIMEZONE'] ?? 'Asia/Jakarta');
 
@@ -58,11 +61,11 @@ define('TIKTOK_REDIRECT_URI', $_ENV['TIKTOK_REDIRECT_URI'] ?? (APP_URL ? (APP_UR
 // Fallback redirect if configured path points to non-existent file (common misconfig)
 if (APP_URL) {
     $meta_path = parse_url(META_REDIRECT_URI, PHP_URL_PATH);
-    if ($meta_path && (str_contains($meta_path, '/auth/') || str_ends_with($meta_path, '/channels.php')) && !file_exists(__DIR__ . $meta_path)) {
+    if ($meta_path && (str_contains($meta_path, '/auth/') || str_ends_with($meta_path, '/channels')) && !file_exists(__DIR__ . $meta_path)) {
         define('META_REDIRECT_URI_FALLBACK', APP_URL . '/channels?meta_callback=1');
     }
     $tiktok_path = parse_url(TIKTOK_REDIRECT_URI, PHP_URL_PATH);
-    if ($tiktok_path && (str_contains($tiktok_path, '/auth/') || str_ends_with($tiktok_path, '/channels.php')) && !file_exists(__DIR__ . $tiktok_path)) {
+    if ($tiktok_path && (str_contains($tiktok_path, '/auth/') || str_ends_with($tiktok_path, '/channels')) && !file_exists(__DIR__ . $tiktok_path)) {
         define('TIKTOK_REDIRECT_URI_FALLBACK', APP_URL . '/channels?tiktok_callback=1');
     }
 }

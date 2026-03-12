@@ -1,6 +1,6 @@
 <?php
 /* =========================================================
- * PAGE: posts_delete.php
+ * PAGE: posts-delete
  * ========================================================= */
 /* SECTION: BOOTSTRAP */
 require_once __DIR__ . '/db.php';
@@ -21,7 +21,7 @@ csrf_verify();
 $id = (int) ($_POST['id'] ?? 0);
 if ($id <= 0) {
     flash_set('danger', 'ID tidak valid.');
-    redirect_to('posts.php');
+    redirect_to('posts');
 }
 
 try {
@@ -36,7 +36,7 @@ try {
     flash_set('danger', APP_DEBUG ? $e->getMessage() : 'Gagal menghapus konten.');
 }
 
-redirect_to('posts.php');
+redirect_to('posts');
 
 /* SECTION: LOAD DATA */
 // Not applicable.

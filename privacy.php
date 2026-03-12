@@ -1,6 +1,6 @@
 <?php
 /* =========================================================
- * PAGE: privacy.php
+ * PAGE: privacy
  * ========================================================= */
 /* SECTION: BOOTSTRAP */
 require_once __DIR__ . '/config.php';
@@ -37,7 +37,7 @@ $contact_email = defined('APP_CONTACT_EMAIL') ? APP_CONTACT_EMAIL : 'support@exa
                                 <h1 class="h3 mb-1">Privacy Policy</h1>
                                 <div class="text-muted small">Effective date: <?php echo htmlspecialchars($effective_date); ?></div>
                             </div>
-                            <a href="login.php" class="btn btn-outline-secondary btn-sm rounded-pill">Back to App</a>
+                            <a href="/login" class="btn btn-outline-secondary btn-sm rounded-pill">Back to App</a>
                         </div>
 
                         <p>This Privacy Policy explains how <strong><?php echo htmlspecialchars($app_name); ?></strong> (the "Service") collects, uses, and protects your information when you use our scheduling and publishing tools.</p>

@@ -1,6 +1,6 @@
 <?php
 /* =========================================================
- * PAGE: posts.php
+ * PAGE: posts
  * ========================================================= */
 /* SECTION: BOOTSTRAP */
 require_once __DIR__ . '/db.php';
@@ -48,7 +48,7 @@ try {
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>posts.php - <?= e(APP_NAME) ?></title>
+<title>posts - <?= e(APP_NAME) ?></title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <!-- SECTION: INLINE CSS -->
 <style>
@@ -89,12 +89,12 @@ body{background:var(--bg);color:var(--ink)}
             <span><?= e(APP_NAME) ?></span>
         </div>
         <nav class="d-grid gap-2">
-            <a href="dashboard.php">Dashboard</a>
-            <a href="posts.php">Posts</a>
-            <a href="post_form.php">Create Post</a>
-            <a href="channels.php">Channels</a>
-            <a href="logs.php">Logs</a>
-            <a href="logout.php">Logout</a>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/posts">Posts</a>
+            <a href="/post-form">Create Post</a>
+            <a href="/channels">Channels</a>
+            <a href="/logs">Logs</a>
+            <a href="/logout">Logout</a>
         </nav>
     </aside>
 
@@ -129,7 +129,7 @@ body{background:var(--bg);color:var(--ink)}
                     foreach ($filters as $key => $label):
                         $active = $status_filter === $key ? 'btn-primary' : 'btn-outline-secondary';
                 ?>
-                    <a class="btn btn-sm <?= e($active) ?> filter-pill" href="posts.php?status=<?= e($key) ?>"><?= e($label) ?></a>
+                    <a class="btn btn-sm <?= e($active) ?> filter-pill" href="/posts?status=<?= e($key) ?>"><?= e($label) ?></a>
                 <?php endforeach; ?>
                     </div>
                 </div>
@@ -138,7 +138,7 @@ body{background:var(--bg);color:var(--ink)}
             <div class="card card-soft p-3 p-lg-4">
                 <div class="d-flex align-items-center justify-content-between mb-3">
                     <div class="fw-semibold">Daftar Konten</div>
-                    <a class="btn btn-sm btn-primary" href="post_form.php">Create Post</a>
+                    <a class="btn btn-sm btn-primary" href="/post-form">Create Post</a>
                 </div>
                 <div class="table-responsive">
                     <table class="table align-middle mb-0">
@@ -168,14 +168,14 @@ body{background:var(--bg);color:var(--ink)}
                                     <td><?= app_status_badge($row['overall_status']) ?></td>
                                     <td><?= e($row['published_at'] ? format_datetime($row['published_at']) : '-') ?></td>
                                     <td class="d-flex flex-wrap gap-2">
-                                        <a class="btn btn-sm btn-outline-secondary" href="post_form.php?id=<?= e($row['id']) ?>">Edit</a>
+                                        <a class="btn btn-sm btn-outline-secondary" href="/post-form?id=<?= e($row['id']) ?>">Edit</a>
                                         <button class="btn btn-sm btn-outline-danger" type="button" data-bs-toggle="modal" data-bs-target="#deleteModal" data-id="<?= e($row['id']) ?>">Delete</button>
-                                        <form method="post" action="posts_retry.php" class="d-inline">
+                                        <form method="post" action="/posts-retry" class="d-inline">
                                             <?= csrf_input() ?>
                                             <input type="hidden" name="id" value="<?= e($row['id']) ?>">
                                             <button class="btn btn-sm btn-outline-warning" type="submit" data-loading="Retrying...">Retry Publish</button>
                                         </form>
-                                        <a class="btn btn-sm btn-outline-info" href="logs.php?post_id=<?= e($row['id']) ?>">View Logs</a>
+                                        <a class="btn btn-sm btn-outline-info" href="/logs?post_id=<?= e($row['id']) ?>">View Logs</a>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
@@ -195,12 +195,12 @@ body{background:var(--bg);color:var(--ink)}
     </div>
     <div class="offcanvas-body">
         <nav class="d-grid gap-2">
-            <a class="btn btn-light text-start" href="dashboard.php">Dashboard</a>
-            <a class="btn btn-light text-start" href="posts.php">Posts</a>
-            <a class="btn btn-light text-start" href="post_form.php">Create Post</a>
-            <a class="btn btn-light text-start" href="channels.php">Channels</a>
-            <a class="btn btn-light text-start" href="logs.php">Logs</a>
-            <a class="btn btn-outline-danger text-start" href="logout.php">Logout</a>
+            <a class="btn btn-light text-start" href="/dashboard">Dashboard</a>
+            <a class="btn btn-light text-start" href="/posts">Posts</a>
+            <a class="btn btn-light text-start" href="/post-form">Create Post</a>
+            <a class="btn btn-light text-start" href="/channels">Channels</a>
+            <a class="btn btn-light text-start" href="/logs">Logs</a>
+            <a class="btn btn-outline-danger text-start" href="/logout">Logout</a>
         </nav>
     </div>
 </div>
@@ -217,7 +217,7 @@ body{background:var(--bg);color:var(--ink)}
             </div>
             <div class="modal-footer">
                 <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
-                <form method="post" action="posts_delete.php">
+                <form method="post" action="/posts-delete">
                     <?= csrf_input() ?>
                     <input type="hidden" name="id" id="deleteId">
                     <button class="btn btn-danger" type="submit" data-loading="Menghapus...">Hapus</button>

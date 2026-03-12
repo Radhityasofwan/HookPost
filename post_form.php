@@ -1,6 +1,6 @@
 <?php
 /* =========================================================
- * PAGE: post_form.php
+ * PAGE: post-form
  * ========================================================= */
 /* SECTION: BOOTSTRAP */
 require_once __DIR__ . '/db.php';
@@ -48,7 +48,7 @@ if ($post_id > 0 && $_SERVER['REQUEST_METHOD'] !== 'POST') {
         $post = $stmt->fetch();
         if (!$post) {
             flash_set('danger', 'Post tidak ditemukan.');
-            redirect_to('posts.php');
+            redirect_to('posts');
         }
         $old['title'] = $post['title'];
         $old['caption'] = $post['caption'];
@@ -214,7 +214,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $pdo->commit();
             flash_set('success', $is_edit ? 'Konten berhasil diperbarui.' : 'Konten berhasil dibuat.');
-            redirect_to('posts.php');
+            redirect_to('posts');
         } catch (Throwable $e) {
             if ($pdo->inTransaction()) $pdo->rollBack();
             $errors[] = APP_DEBUG ? $e->getMessage() : 'Gagal menyimpan konten.';
@@ -245,7 +245,7 @@ if ($is_edit && $existing_media === null) {
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>post_form.php - <?= e(APP_NAME) ?></title>
+<title>post-form - <?= e(APP_NAME) ?></title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <!-- SECTION: INLINE CSS -->
 <style>
@@ -285,12 +285,12 @@ body{background:var(--bg);color:var(--ink)}
             <span><?= e(APP_NAME) ?></span>
         </div>
         <nav class="d-grid gap-2">
-            <a href="dashboard.php">Dashboard</a>
-            <a href="posts.php">Posts</a>
-            <a href="post_form.php">Create Post</a>
-            <a href="channels.php">Channels</a>
-            <a href="logs.php">Logs</a>
-            <a href="logout.php">Logout</a>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/posts">Posts</a>
+            <a href="/post-form">Create Post</a>
+            <a href="/channels">Channels</a>
+            <a href="/logs">Logs</a>
+            <a href="/logout">Logout</a>
         </nav>
     </aside>
 
@@ -431,7 +431,7 @@ body{background:var(--bg);color:var(--ink)}
                 </div>
 
                 <div class="d-flex justify-content-end gap-2 mt-4">
-                    <a class="btn btn-outline-secondary" href="posts.php">Batal</a>
+                    <a class="btn btn-outline-secondary" href="/posts">Batal</a>
                     <button class="btn btn-primary" type="submit" data-loading="Menyimpan...">Simpan Konten</button>
                 </div>
             </form>
@@ -446,12 +446,12 @@ body{background:var(--bg);color:var(--ink)}
     </div>
     <div class="offcanvas-body">
         <nav class="d-grid gap-2">
-            <a class="btn btn-light text-start" href="dashboard.php">Dashboard</a>
-            <a class="btn btn-light text-start" href="posts.php">Posts</a>
-            <a class="btn btn-light text-start" href="post_form.php">Create Post</a>
-            <a class="btn btn-light text-start" href="channels.php">Channels</a>
-            <a class="btn btn-light text-start" href="logs.php">Logs</a>
-            <a class="btn btn-outline-danger text-start" href="logout.php">Logout</a>
+            <a class="btn btn-light text-start" href="/dashboard">Dashboard</a>
+            <a class="btn btn-light text-start" href="/posts">Posts</a>
+            <a class="btn btn-light text-start" href="/post-form">Create Post</a>
+            <a class="btn btn-light text-start" href="/channels">Channels</a>
+            <a class="btn btn-light text-start" href="/logs">Logs</a>
+            <a class="btn btn-outline-danger text-start" href="/logout">Logout</a>
         </nav>
     </div>
 </div>

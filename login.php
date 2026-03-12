@@ -1,12 +1,12 @@
 <?php
 /* =========================================================
- * PAGE: login.php
+ * PAGE: login
  * ========================================================= */
 require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/helpers.php';
 
 if (!empty($_SESSION['user_id'])) {
-    redirect_to('dashboard.php');
+    redirect_to('dashboard');
 }
 
 $error = '';
@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['user_id'] = (int) $user['id'];
             $_SESSION['user_name'] = $user['name'];
             flash_set('success', 'Login berhasil.');
-            redirect_to('dashboard.php');
+            redirect_to('dashboard');
         } else {
             $error = 'Email atau password salah.';
         }
