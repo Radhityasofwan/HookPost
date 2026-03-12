@@ -24,8 +24,8 @@ if (!function_exists('env_load')) {
 }
 
 env_load(__DIR__ . '/.env');
-if (($_ENV['APP_ENV'] ?? '') === 'production' && file_exists(__DIR__ . '/.env.production')) {
-    env_load(__DIR__ . '/.env.production');
+if (file_exists(__DIR__ . '/.env.local')) {
+    env_load(__DIR__ . '/.env.local');
 }
 
 date_default_timezone_set($_ENV['APP_TIMEZONE'] ?? 'Asia/Jakarta');

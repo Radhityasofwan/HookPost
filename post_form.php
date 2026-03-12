@@ -250,21 +250,30 @@ if ($is_edit && $existing_media === null) {
 <!-- SECTION: INLINE CSS -->
 <style>
 :root{
-  --bg:#f7f8fc;
+  --bg:#f6f7fb;
   --card:#ffffff;
-  --ink:#111827;
+  --ink:#0f172a;
   --muted:#6b7280;
-  --line:#eef2f7;
-  --brand:#2563eb;
+  --line:#e6eaf2;
+  --meta:#0866ff;
+  --tiktok:#fe2c55;
+  --tiktok-2:#25f4ee;
   --soft-shadow:0 18px 40px rgba(15,23,42,.08);
   --radius:20px;
 }
 body{background:var(--bg);color:var(--ink)}
-.sidebar{width:260px;min-height:100vh;background:#0f172a;color:#fff;border-right:1px solid rgba(255,255,255,.04)}
-.sidebar .brand{display:flex;align-items:center;gap:10px;font-weight:700}
-.sidebar .dot{width:10px;height:10px;border-radius:999px;background:var(--brand)}
+.sidebar{width:260px;flex:0 0 260px;min-height:100vh;background:linear-gradient(180deg,#0b1220 0%,#0f172a 100%);color:#fff;border-right:1px solid rgba(255,255,255,.06);transition:width .2s ease}
+body.sidebar-collapsed .sidebar{width:84px;flex:0 0 84px}
+.sidebar .brand{display:flex;align-items:center;gap:12px;padding:8px 10px}
+.brand-logo{width:36px;height:36px;border-radius:12px;box-shadow:0 8px 18px rgba(0,0,0,.25);object-fit:cover}
+.brand-title{font-weight:700;line-height:1.1}
+.brand-sub{font-size:.75rem;color:rgba(255,255,255,.65)}
+body.sidebar-collapsed .brand-text{display:none}
 .sidebar a{color:rgba(255,255,255,.86);text-decoration:none;display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:16px}
+.sidebar .nav-icon{width:10px;height:10px;border-radius:999px;background:var(--tiktok);box-shadow:0 0 0 4px rgba(254,44,85,.15)}
 .sidebar a:hover,.sidebar a.active{background:rgba(255,255,255,.12);color:#fff}
+body.sidebar-collapsed .sidebar a{justify-content:center}
+body.sidebar-collapsed .sidebar .nav-label{display:none}
 .card-soft{border:0;border-radius:var(--radius);background:var(--card);box-shadow:var(--soft-shadow)}
 .navbar{background:var(--card);border-bottom:1px solid var(--line)}
 .preview-box{border:1px dashed var(--line);border-radius:16px;background:#fafbff}
@@ -281,16 +290,19 @@ body{background:var(--bg);color:var(--ink)}
 <div class="d-flex">
     <aside class="sidebar p-3">
         <div class="brand mb-4">
-            <span class="dot"></span>
-            <span><?= e(APP_NAME) ?></span>
+            <img src="/image/logo/hookpost.png" class="brand-logo" alt="HookPost">
+            <div class="brand-text">
+                <div class="brand-title"><?= e(APP_NAME) ?></div>
+                <div class="brand-sub">Meta + TikTok Suite</div>
+            </div>
         </div>
         <nav class="d-grid gap-2">
-            <a href="/dashboard">Dashboard</a>
-            <a href="/posts">Posts</a>
-            <a href="/post-form">Create Post</a>
-            <a href="/channels">Channels</a>
-            <a href="/logs">Logs</a>
-            <a href="/logout">Logout</a>
+            <a href="/dashboard"><span class="nav-icon"></span><span class="nav-label">Dashboard</span></a>
+            <a href="/posts"><span class="nav-icon"></span><span class="nav-label">Posts</span></a>
+            <a href="/post-form"><span class="nav-icon"></span><span class="nav-label">Create Post</span></a>
+            <a href="/channels"><span class="nav-icon"></span><span class="nav-label">Channels</span></a>
+            <a href="/logs"><span class="nav-icon"></span><span class="nav-label">Logs</span></a>
+            <a href="/logout"><span class="nav-icon"></span><span class="nav-label">Logout</span></a>
         </nav>
     </aside>
 
@@ -299,6 +311,9 @@ body{background:var(--bg);color:var(--ink)}
             <div class="d-flex align-items-center gap-2">
                 <button class="btn btn-outline-secondary d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar">
                     ☰
+                </button>
+                <button class="btn btn-outline-secondary d-none d-lg-inline-flex" id="sidebarToggle" type="button">
+                    ⇄
                 </button>
                 <div class="fw-semibold"><?= $is_edit ? 'Edit Post' : 'Create Post' ?></div>
             </div>
@@ -558,8 +573,16 @@ input?.addEventListener('change', ()=>{
   }
 });
 
+const currentPath = location.pathname.replace(/\\/$/, '');
+const sidebarToggle = document.getElementById('sidebarToggle');
+const collapsed = localStorage.getItem('sidebar-collapsed') === '1';
+if (collapsed) document.body.classList.add('sidebar-collapsed');
+sidebarToggle?.addEventListener('click', () => {
+  document.body.classList.toggle('sidebar-collapsed');
+  localStorage.setItem('sidebar-collapsed', document.body.classList.contains('sidebar-collapsed') ? '1' : '0');
+});
 document.querySelectorAll('.sidebar a').forEach(a=>{
-  if(a.getAttribute('href')===location.pathname.split('/').pop()){a.classList.add('active')}
+  if(a.getAttribute('href') === currentPath){a.classList.add('active')}
 });
 
 document.querySelectorAll('form').forEach(form=>{

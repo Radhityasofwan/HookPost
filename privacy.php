@@ -30,14 +30,14 @@ $contact_email = defined('APP_CONTACT_EMAIL') ? APP_CONTACT_EMAIL : 'support@exa
     <div class="container py-5">
         <div class="row justify-content-center">
             <div class="col-lg-9">
-                <div class="card border-0 shadow-sm rounded-4">
+                <div class="card border-0 shadow-sm rounded-4 policy-card">
                     <div class="card-body p-4 p-md-5">
                         <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-4">
                             <div>
                                 <h1 class="h3 mb-1">Privacy Policy</h1>
                                 <div class="text-muted small">Effective date: <?php echo htmlspecialchars($effective_date); ?></div>
                             </div>
-                            <a href="/login" class="btn btn-outline-secondary btn-sm rounded-pill">Back to App</a>
+                            <a href="/login" class="btn btn-outline-light btn-sm rounded-pill">Back to App</a>
                         </div>
 
                         <p>This Privacy Policy explains how <strong><?php echo htmlspecialchars($app_name); ?></strong> (the "Service") collects, uses, and protects your information when you use our scheduling and publishing tools.</p>
@@ -88,18 +88,34 @@ $contact_email = defined('APP_CONTACT_EMAIL') ? APP_CONTACT_EMAIL : 'support@exa
 
     <!-- SECTION: INLINE CSS -->
     <style>
-        .card {
+        :root{
+            --bg:#0b1020;
+            --card:#111827;
+            --ink:#f8fafc;
+            --muted:#94a3b8;
+            --line:#1f2937;
+            --tiktok:#fe2c55;
+            --meta:#0866ff;
+        }
+        body{
+            background:
+                radial-gradient(1100px 600px at 90% -10%, rgba(37,244,238,.12), transparent 60%),
+                radial-gradient(900px 500px at -10% 10%, rgba(254,44,85,.16), transparent 55%),
+                #0b1020;
+            color:var(--ink);
+        }
+        .policy-card{
             border-radius: 1.25rem;
+            background:rgba(17,24,39,.92);
+            border:1px solid rgba(255,255,255,.06);
+            box-shadow:0 20px 60px rgba(0,0,0,.35);
+            backdrop-filter: blur(6px);
         }
-        h1, h2 {
-            letter-spacing: -0.01em;
-        }
-        ul {
-            padding-left: 1.25rem;
-        }
-        li {
-            margin-bottom: 0.25rem;
-        }
+        h1, h2 { letter-spacing: -0.01em; }
+        .text-muted, .small { color: var(--muted) !important; }
+        a { color: #e2e8f0; }
+        ul { padding-left: 1.25rem; }
+        li { margin-bottom: 0.25rem; }
     </style>
 
     <!-- SECTION: INLINE JS -->
