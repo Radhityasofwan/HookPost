@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   --bg:#0b1020;
   --card:#111827;
   --ink:#f8fafc;
-  --muted:#94a3b8;
+  --muted:#cbd5e1;
   --line:#1f2937;
   --tiktok:#fe2c55;
   --tiktok-2:#25f4ee;
@@ -84,9 +84,11 @@ body{
 .muted{color:var(--muted)}
 .form-control{
   background:#0f172a;
-  border:1px solid var(--line);
+  border:1px solid #2a3342;
   color:var(--ink);
 }
+.form-label{color:#e2e8f0}
+.form-control::placeholder{color:#94a3b8}
 .form-control:focus{
   background:#0f172a;
   color:var(--ink);

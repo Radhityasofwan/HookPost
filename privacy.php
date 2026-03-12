@@ -92,7 +92,7 @@ $contact_email = defined('APP_CONTACT_EMAIL') ? APP_CONTACT_EMAIL : 'support@exa
             --bg:#0b1020;
             --card:#111827;
             --ink:#f8fafc;
-            --muted:#94a3b8;
+            --muted:#cbd5e1;
             --line:#1f2937;
             --tiktok:#fe2c55;
             --meta:#0866ff;
@@ -113,6 +113,8 @@ $contact_email = defined('APP_CONTACT_EMAIL') ? APP_CONTACT_EMAIL : 'support@exa
         }
         h1, h2 { letter-spacing: -0.01em; }
         .text-muted, .small { color: var(--muted) !important; }
+        p, li { color:#e2e8f0; }
+        strong { color:#f8fafc; }
         a { color: #e2e8f0; }
         ul { padding-left: 1.25rem; }
         li { margin-bottom: 0.25rem; }
