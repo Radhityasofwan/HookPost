@@ -38,7 +38,7 @@ $callback_url = (defined('APP_URL') && APP_URL) ? (APP_URL . '/data-deletion') :
                                 <h1 class="h3 mb-1">Data Deletion Instructions</h1>
                                 <div class="text-muted small">Effective date: <?php echo htmlspecialchars($effective_date); ?></div>
                             </div>
-                            <a href="/login" class="btn btn-outline-light btn-sm rounded-pill">Back to App</a>
+                            <a href="/login" class="btn btn-outline-secondary btn-sm rounded-pill">Back to App</a>
                         </div>
 
                         <p>This page explains how to request deletion of your data associated with <strong><?php echo htmlspecialchars($app_name); ?></strong>.</p>
@@ -63,7 +63,7 @@ $callback_url = (defined('APP_URL') && APP_URL) ? (APP_URL . '/data-deletion') :
 
                         <h2 class="h5 mt-4">4. Callback URL</h2>
                         <p>If a platform requires a data deletion callback URL, use:</p>
-                        <div class="p-3 bg-black border border-secondary rounded-3 small text-light">
+                        <div class="p-3 bg-light border rounded-3 small">
                             <?php echo htmlspecialchars($callback_url ?: 'Set APP_URL in .env to display callback URL'); ?>
                         </div>
                         <p class="text-muted small mt-2">This page can be provided as the public data deletion URL for platform compliance.</p>
@@ -79,32 +79,32 @@ $callback_url = (defined('APP_URL') && APP_URL) ? (APP_URL . '/data-deletion') :
     <!-- SECTION: INLINE CSS -->
     <style>
         :root{
-            --bg:#0b1020;
-            --card:#111827;
-            --ink:#f8fafc;
-            --muted:#cbd5e1;
-            --line:#1f2937;
+            --bg:#f4f6fb;
+            --card:#ffffff;
+            --ink:#0f172a;
+            --muted:#475569;
+            --line:#e2e8f0;
             --tiktok:#fe2c55;
             --meta:#0866ff;
         }
         body{
             background:
                 radial-gradient(1100px 600px at 90% -10%, rgba(37,244,238,.12), transparent 60%),
-                radial-gradient(900px 500px at -10% 10%, rgba(254,44,85,.16), transparent 55%),
-                #0b1020;
+                radial-gradient(900px 500px at -10% 10%, rgba(254,44,85,.12), transparent 55%),
+                #f4f6fb;
             color:var(--ink);
         }
         .policy-card{
             border-radius: 1.25rem;
-            background:rgba(17,24,39,.92);
-            border:1px solid rgba(255,255,255,.06);
-            box-shadow:0 20px 60px rgba(0,0,0,.35);
-            backdrop-filter: blur(6px);
+            background:var(--card);
+            border:1px solid var(--line);
+            box-shadow:0 18px 40px rgba(15,23,42,.08);
         }
         h1, h2 { letter-spacing: -0.01em; }
         .text-muted, .small { color: var(--muted) !important; }
-        p, li { color:#e2e8f0; }
-        strong { color:#f8fafc; }
+        p, li { color:#0f172a; }
+        strong { color:#0f172a; }
+        a { color:#0f172a; }
         a { color: #e2e8f0; }
         ul { padding-left: 1.25rem; }
         li { margin-bottom: 0.25rem; }

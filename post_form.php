@@ -250,19 +250,20 @@ if ($is_edit && $existing_media === null) {
 <!-- SECTION: INLINE CSS -->
 <style>
 :root{
-  --bg:#f6f7fb;
+  --bg:#f4f6fb;
   --card:#ffffff;
   --ink:#0f172a;
-  --muted:#6b7280;
-  --line:#e6eaf2;
+  --muted:#475569;
+  --line:#e2e8f0;
   --meta:#0866ff;
   --tiktok:#fe2c55;
   --tiktok-2:#25f4ee;
-  --soft-shadow:0 18px 40px rgba(15,23,42,.08);
-  --radius:20px;
+  --soft-shadow:0 16px 40px rgba(15,23,42,.10);
+  --radius:18px;
 }
 body{background:var(--bg);color:var(--ink)}
-.sidebar{width:260px;flex:0 0 260px;min-height:100vh;background:linear-gradient(180deg,#0b1220 0%,#0f172a 100%);color:#fff;border-right:1px solid rgba(255,255,255,.06);transition:width .2s ease}
+.text-secondary{color:var(--muted)!important}
+.sidebar{width:260px;flex:0 0 260px;min-height:100vh;background:linear-gradient(180deg,#0f172a 0%,#0b1220 100%);color:#f8fafc;border-right:1px solid rgba(255,255,255,.06);transition:width .2s ease}
 body.sidebar-collapsed .sidebar{width:84px;flex:0 0 84px}
 .sidebar .brand{display:flex;align-items:center;gap:12px;padding:8px 10px}
 .brand-logo{width:36px;height:36px;border-radius:12px;box-shadow:0 8px 18px rgba(0,0,0,.25);object-fit:cover}
@@ -270,7 +271,7 @@ body.sidebar-collapsed .sidebar{width:84px;flex:0 0 84px}
 .brand-sub{font-size:.75rem;color:rgba(255,255,255,.65)}
 body.sidebar-collapsed .brand-text{display:none}
 .sidebar a{color:rgba(255,255,255,.86);text-decoration:none;display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:16px}
-.sidebar .nav-icon{width:10px;height:10px;border-radius:999px;background:var(--tiktok);box-shadow:0 0 0 4px rgba(254,44,85,.15)}
+.sidebar .nav-icon{width:10px;height:10px;border-radius:999px;background:linear-gradient(135deg,var(--tiktok),var(--meta));box-shadow:0 0 0 4px rgba(8,102,255,.12)}
 .sidebar a:hover,.sidebar a.active{background:rgba(255,255,255,.12);color:#fff}
 body.sidebar-collapsed .sidebar a{justify-content:center}
 body.sidebar-collapsed .sidebar .nav-label{display:none}
@@ -280,12 +281,20 @@ body.sidebar-collapsed .sidebar .nav-label{display:none}
 .preview-media{max-width:100%;max-height:320px;border-radius:14px}
 .platform-grid label{border:1px solid var(--line);border-radius:14px;padding:10px 12px;width:100%}
 .section-title{font-size:.95rem;color:var(--muted);letter-spacing:.3px;text-transform:uppercase}
+.pjax-bar{
+  position:fixed;top:0;left:0;width:100%;height:3px;
+  background:linear-gradient(90deg,var(--tiktok),var(--tiktok-2),var(--meta));
+  transform:scaleX(0);transform-origin:left;opacity:0;transition:opacity .2s ease, transform .35s ease;
+  z-index:9999;
+}
+body.pjax-loading .pjax-bar{opacity:1;transform:scaleX(.85)}
 @media (max-width: 992px){
   .sidebar{display:none}
 }
 </style>
 </head>
 <body>
+<div class="pjax-bar" id="pjaxBar"></div>
 <!-- SECTION: HTML -->
 <div class="d-flex">
     <aside class="sidebar p-3">
@@ -307,6 +316,7 @@ body.sidebar-collapsed .sidebar .nav-label{display:none}
     </aside>
 
     <div class="flex-grow-1">
+        <div id="app-main">
         <nav class="navbar px-3 px-lg-4">
             <div class="d-flex align-items-center gap-2">
                 <button class="btn btn-outline-secondary d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar">
@@ -451,6 +461,7 @@ body.sidebar-collapsed .sidebar .nav-label{display:none}
                 </div>
             </form>
         </main>
+        </div>
     </div>
 </div>
 
@@ -474,127 +485,218 @@ body.sidebar-collapsed .sidebar .nav-label{display:none}
 <!-- SECTION: INLINE JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-function toggleCustomCaptions(){
-  const mode = document.querySelector('input[name="mode"]:checked')?.value || 'mirror';
-  document.getElementById('customCaptionWrap').style.display = mode === 'custom' ? 'block' : 'none';
-  updateCaptionPreview();
-}
-document.querySelectorAll('input[name="mode"]').forEach(r=>{
-  r.addEventListener('change', toggleCustomCaptions);
-});
-toggleCustomCaptions();
+(() => {
+  const allowPaths = ['/dashboard','/posts','/post-form','/channels','/logs'];
 
-function selectedPlatforms(){
-  return Array.from(document.querySelectorAll('input[name="platforms[]"]:checked')).map(el=>el.value);
-}
-
-function updatePlatformBadges(){
-  const container = document.getElementById('selectedPlatforms');
-  const platforms = selectedPlatforms();
-  if (!platforms.length) {
-    container.innerHTML = '<span class="text-secondary">Belum ada platform dipilih.</span>';
-    return;
+  function setActiveNav() {
+    const currentPath = location.pathname.replace(/\/$/, '');
+    document.querySelectorAll('.sidebar a').forEach(a=>{
+      a.classList.toggle('active', a.getAttribute('href') === currentPath);
+    });
   }
-  const labels = {
-    instagram: 'Instagram',
-    facebook: 'Facebook',
-    threads: 'Threads',
-    tiktok: 'TikTok',
-  };
-  container.innerHTML = platforms.map(p=>`<span class="badge text-bg-light border me-1">${labels[p] || p}</span>`).join('');
-}
 
-function getCaptionFor(platform){
-  const mode = document.querySelector('input[name="mode"]:checked')?.value || 'mirror';
-  const main = document.querySelector('textarea[name="caption"]').value || '';
-  if (mode === 'mirror') return main;
-  if (platform === 'instagram') return document.querySelector('textarea[name="caption_instagram"]').value || main;
-  if (platform === 'facebook') return document.querySelector('textarea[name="caption_facebook"]').value || main;
-  if (platform === 'threads') return document.querySelector('textarea[name="caption_threads"]').value || main;
-  if (platform === 'tiktok') return document.querySelector('textarea[name="caption_tiktok"]').value || main;
-  return main;
-}
-
-function updateCaptionPreview(){
-  const container = document.getElementById('captionPreview');
-  const platforms = selectedPlatforms();
-  if (!platforms.length) {
-    container.innerHTML = '<div class="text-secondary">Pilih platform untuk melihat preview.</div>';
-    return;
+  function initSidebar() {
+    const toggle = document.getElementById('sidebarToggle');
+    const collapsed = localStorage.getItem('sidebar-collapsed') === '1';
+    if (collapsed) document.body.classList.add('sidebar-collapsed');
+    if (toggle && !toggle.dataset.bound) {
+      toggle.dataset.bound = '1';
+      toggle.addEventListener('click', () => {
+        document.body.classList.toggle('sidebar-collapsed');
+        localStorage.setItem('sidebar-collapsed', document.body.classList.contains('sidebar-collapsed') ? '1' : '0');
+      });
+    }
   }
-  const labels = {
-    instagram: 'Instagram',
-    facebook: 'Facebook',
-    threads: 'Threads',
-    tiktok: 'TikTok',
-  };
-  container.innerHTML = platforms.map(p=>{
-    const caption = getCaptionFor(p);
-    const safe = caption.replace(/</g,'&lt;').replace(/>/g,'&gt;');
-    return `<div class="mb-2"><div class="fw-semibold">${labels[p] || p}</div><div class="text-secondary small">${safe || '-'}</div></div>`;
-  }).join('') || '<div class="text-secondary">Pilih platform untuk melihat preview.</div>';
-}
 
-document.querySelectorAll('input[name="platforms[]"]').forEach(el=>{
-  el.addEventListener('change', ()=>{
+  function initFormLoading() {
+    document.querySelectorAll('form').forEach(form=>{
+      if (form.dataset.loadingBound) return;
+      form.dataset.loadingBound = '1';
+      form.addEventListener('submit', ()=>{
+        const btn = form.querySelector('button[type="submit"][data-loading]');
+        if (btn) {
+          btn.dataset.originalText = btn.textContent;
+          btn.disabled = true;
+          btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>' + btn.getAttribute('data-loading');
+        }
+      });
+    });
+  }
+
+  function initDeleteModal() {
+    const deleteModal = document.getElementById('deleteModal');
+    if (!deleteModal || deleteModal.dataset.bound) return;
+    deleteModal.dataset.bound = '1';
+    deleteModal.addEventListener('show.bs.modal', event=>{
+      const btn = event.relatedTarget;
+      const id = btn?.getAttribute('data-id');
+      const input = document.getElementById('deleteId');
+      if (input) input.value = id || '';
+    });
+  }
+
+  function initPostFormUI() {
+    const form = document.querySelector('form');
+    const mediaInput = document.getElementById('mediaInput');
+    const customWrap = document.getElementById('customCaptionWrap');
+    if (!form || (!mediaInput && !customWrap)) return;
+    if (form.dataset.postFormBound) return;
+    form.dataset.postFormBound = '1';
+
+    function toggleCustomCaptions(){
+      const mode = document.querySelector('input[name="mode"]:checked')?.value || 'mirror';
+      const wrap = document.getElementById('customCaptionWrap');
+      if (wrap) wrap.style.display = mode === 'custom' ? 'block' : 'none';
+      updateCaptionPreview();
+    }
+    document.querySelectorAll('input[name="mode"]').forEach(r=>{
+      r.addEventListener('change', toggleCustomCaptions);
+    });
+
+    function selectedPlatforms(){
+      return Array.from(document.querySelectorAll('input[name="platforms[]"]:checked')).map(el=>el.value);
+    }
+
+    function updatePlatformBadges(){
+      const container = document.getElementById('selectedPlatforms');
+      if (!container) return;
+      const platforms = selectedPlatforms();
+      if (!platforms.length) {
+        container.innerHTML = '<span class="text-secondary">Belum ada platform dipilih.</span>';
+        return;
+      }
+      const labels = { instagram:'Instagram', facebook:'Facebook', threads:'Threads', tiktok:'TikTok' };
+      container.innerHTML = platforms.map(p=>`<span class="badge text-bg-light border me-1">${labels[p] || p}</span>`).join('');
+    }
+
+    function getCaptionFor(platform){
+      const mode = document.querySelector('input[name="mode"]:checked')?.value || 'mirror';
+      const main = document.querySelector('textarea[name="caption"]')?.value || '';
+      if (mode === 'mirror') return main;
+      if (platform === 'instagram') return document.querySelector('textarea[name="caption_instagram"]')?.value || main;
+      if (platform === 'facebook') return document.querySelector('textarea[name="caption_facebook"]')?.value || main;
+      if (platform === 'threads') return document.querySelector('textarea[name="caption_threads"]')?.value || main;
+      if (platform === 'tiktok') return document.querySelector('textarea[name="caption_tiktok"]')?.value || main;
+      return main;
+    }
+
+    function updateCaptionPreview(){
+      const container = document.getElementById('captionPreview');
+      if (!container) return;
+      const platforms = selectedPlatforms();
+      if (!platforms.length) {
+        container.innerHTML = '<div class="text-secondary">Pilih platform untuk melihat preview.</div>';
+        return;
+      }
+      const labels = { instagram:'Instagram', facebook:'Facebook', threads:'Threads', tiktok:'TikTok' };
+      container.innerHTML = platforms.map(p=>{
+        const caption = getCaptionFor(p);
+        const safe = (caption || '').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+        return `<div class="mb-2"><div class="fw-semibold">${labels[p] || p}</div><div class="text-secondary small">${safe || '-'}</div></div>`;
+      }).join('') || '<div class="text-secondary">Pilih platform untuk melihat preview.</div>';
+    }
+
+    document.querySelectorAll('input[name="platforms[]"]').forEach(el=>{
+      el.addEventListener('change', ()=>{
+        updatePlatformBadges();
+        updateCaptionPreview();
+      });
+    });
+    document.querySelectorAll('textarea[name="caption"], textarea[name^="caption_"]').forEach(el=>{
+      el.addEventListener('input', updateCaptionPreview);
+    });
+
+    toggleCustomCaptions();
     updatePlatformBadges();
     updateCaptionPreview();
-  });
-});
-document.querySelectorAll('textarea[name="caption"], textarea[name^="caption_"]').forEach(el=>{
-  el.addEventListener('input', updateCaptionPreview);
-});
-updatePlatformBadges();
-updateCaptionPreview();
 
-const preview = document.getElementById('mediaPreview');
-const input = document.getElementById('mediaInput');
-input?.addEventListener('change', ()=>{
-  preview.innerHTML = '';
-  const file = input.files?.[0];
-  if (!file) {
-    preview.innerHTML = '<div class="text-secondary">Belum ada media.</div>';
-    return;
-  }
-  const url = URL.createObjectURL(file);
-  if (file.type.startsWith('image/')) {
-    const img = document.createElement('img');
-    img.src = url;
-    img.className = 'preview-media';
-    preview.appendChild(img);
-  } else if (file.type.startsWith('video/')) {
-    const video = document.createElement('video');
-    video.src = url;
-    video.controls = true;
-    video.className = 'preview-media';
-    preview.appendChild(video);
-  } else {
-    preview.innerHTML = '<div class="text-secondary">Format tidak didukung.</div>';
-  }
-});
-
-const currentPath = location.pathname.replace(/\/$/, '');
-const sidebarToggle = document.getElementById('sidebarToggle');
-const collapsed = localStorage.getItem('sidebar-collapsed') === '1';
-if (collapsed) document.body.classList.add('sidebar-collapsed');
-sidebarToggle?.addEventListener('click', () => {
-  document.body.classList.toggle('sidebar-collapsed');
-  localStorage.setItem('sidebar-collapsed', document.body.classList.contains('sidebar-collapsed') ? '1' : '0');
-});
-document.querySelectorAll('.sidebar a').forEach(a=>{
-  if(a.getAttribute('href') === currentPath){a.classList.add('active')}
-});
-
-document.querySelectorAll('form').forEach(form=>{
-  form.addEventListener('submit', ()=>{
-    const btn = form.querySelector('button[type="submit"][data-loading]');
-    if (btn) {
-      btn.dataset.originalText = btn.textContent;
-      btn.disabled = true;
-      btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>' + btn.getAttribute('data-loading');
+    if (mediaInput) {
+      const preview = document.getElementById('mediaPreview');
+      mediaInput.addEventListener('change', ()=>{
+        if (!preview) return;
+        preview.innerHTML = '';
+        const file = mediaInput.files?.[0];
+        if (!file) {
+          preview.innerHTML = '<div class="text-secondary">Belum ada media.</div>';
+          return;
+        }
+        const url = URL.createObjectURL(file);
+        if (file.type.startsWith('image/')) {
+          const img = document.createElement('img');
+          img.src = url;
+          img.className = 'preview-media';
+          preview.appendChild(img);
+        } else if (file.type.startsWith('video/')) {
+          const video = document.createElement('video');
+          video.src = url;
+          video.controls = true;
+          video.className = 'preview-media';
+          preview.appendChild(video);
+        } else {
+          preview.innerHTML = '<div class="text-secondary">Format tidak didukung.</div>';
+        }
+      });
     }
-  });
-});
+  }
+
+  function appInit(){
+    initSidebar();
+    setActiveNav();
+    initFormLoading();
+    initDeleteModal();
+    initPostFormUI();
+  }
+
+  function setLoading(on){
+    document.body.classList.toggle('pjax-loading', on);
+  }
+
+  function pjaxNavigate(url, isPop){
+    const main = document.getElementById('app-main');
+    if (!main) { location.href = url; return; }
+    setLoading(true);
+    fetch(url, { headers: { 'X-PJAX': '1' } })
+      .then(r => r.text())
+      .then(html => {
+        const doc = new DOMParser().parseFromString(html, 'text/html');
+        const newMain = doc.getElementById('app-main');
+        if (!newMain) { location.href = url; return; }
+        main.innerHTML = newMain.innerHTML;
+        document.title = doc.title || document.title;
+        if (!isPop) history.pushState({}, '', url);
+        appInit();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      })
+      .catch(() => location.href = url)
+      .finally(() => setLoading(false));
+  }
+
+  function bindPjax(){
+    if (window.__pjaxBound) return;
+    window.__pjaxBound = true;
+    document.addEventListener('click', (e)=>{
+      const link = e.target.closest('a');
+      if (!link) return;
+      if (link.hasAttribute('data-no-pjax')) return;
+      if (link.target && link.target !== '_self') return;
+      const href = link.getAttribute('href');
+      if (!href || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:')) return;
+      const url = new URL(link.href, location.origin);
+      if (url.origin !== location.origin) return;
+      if (!allowPaths.includes(url.pathname)) return;
+      e.preventDefault();
+      pjaxNavigate(url.href);
+    });
+    window.addEventListener('popstate', () => {
+      if (allowPaths.includes(location.pathname)) {
+        pjaxNavigate(location.href, true);
+      }
+    });
+  }
+
+  bindPjax();
+  appInit();
+})();
 </script>
 </body>
 </html>
