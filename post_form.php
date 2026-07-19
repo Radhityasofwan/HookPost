@@ -263,6 +263,7 @@ if ($is_edit && $existing_media === null) {
 }
 body{background:var(--bg);color:var(--ink)}
 .text-secondary{color:var(--muted)!important}
+.text-secondary{color:var(--muted)!important}
 .sidebar{width:260px;flex:0 0 260px;min-height:100vh;background:linear-gradient(180deg,#0f172a 0%,#0b1220 100%);color:#f8fafc;border-right:1px solid rgba(255,255,255,.06);transition:width .2s ease}
 body.sidebar-collapsed .sidebar{width:84px;flex:0 0 84px}
 .sidebar .brand{display:flex;align-items:center;gap:12px;padding:8px 10px}
@@ -281,6 +282,18 @@ body.sidebar-collapsed .sidebar .nav-label{display:none}
 .preview-media{max-width:100%;max-height:320px;border-radius:14px}
 .platform-grid label{border:1px solid var(--line);border-radius:14px;padding:10px 12px;width:100%}
 .section-title{font-size:.95rem;color:var(--muted);letter-spacing:.3px;text-transform:uppercase}
+.mobile-nav{
+  position:fixed;left:0;right:0;bottom:0;
+  background:#fff;border-top:1px solid var(--line);
+  display:flex;gap:6px;justify-content:space-around;
+  padding:8px 10px;z-index:1030;
+  box-shadow:0 -10px 25px rgba(15,23,42,.08);
+}
+.mobile-nav a{
+  flex:1;text-align:center;text-decoration:none;
+  color:var(--muted);font-size:.75rem;padding:8px 6px;border-radius:12px;
+}
+.mobile-nav a.active{color:var(--ink);background:#f1f5f9;font-weight:600}
 .pjax-bar{
   position:fixed;top:0;left:0;width:100%;height:3px;
   background:linear-gradient(90deg,var(--tiktok),var(--tiktok-2),var(--meta));
@@ -290,6 +303,7 @@ body.sidebar-collapsed .sidebar .nav-label{display:none}
 body.pjax-loading .pjax-bar{opacity:1;transform:scaleX(.85)}
 @media (max-width: 992px){
   .sidebar{display:none}
+  main{padding-bottom:96px}
 }
 </style>
 </head>
@@ -482,6 +496,14 @@ body.pjax-loading .pjax-bar{opacity:1;transform:scaleX(.85)}
     </div>
 </div>
 
+<nav class="mobile-nav d-lg-none">
+    <a href="/dashboard">Dashboard</a>
+    <a href="/posts">Posts</a>
+    <a href="/post-form">Create</a>
+    <a href="/channels">Channels</a>
+    <a href="/logs">Logs</a>
+</nav>
+
 <!-- SECTION: INLINE JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
@@ -491,6 +513,9 @@ body.pjax-loading .pjax-bar{opacity:1;transform:scaleX(.85)}
   function setActiveNav() {
     const currentPath = location.pathname.replace(/\/$/, '');
     document.querySelectorAll('.sidebar a').forEach(a=>{
+      a.classList.toggle('active', a.getAttribute('href') === currentPath);
+    });
+    document.querySelectorAll('.mobile-nav a').forEach(a=>{
       a.classList.toggle('active', a.getAttribute('href') === currentPath);
     });
   }
